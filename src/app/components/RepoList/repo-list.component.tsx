@@ -1,7 +1,7 @@
 import React from "react";
 import { toggleFavorite, isFavorited } from "@/utils/favorites";
-import Typography from "../Typography/typography.component";
 import { HeartIcon } from "@heroicons/react/24/solid";
+import { Typography } from "../Typography/typography.component";
 
 interface Repo {
   id: number | string;
@@ -40,7 +40,7 @@ const LANGUAGE_COLORS: Record<string, string> = {
 const getLanguageColor = (language?: string): string =>
   LANGUAGE_COLORS[language ?? "default"];
 
-export function RepoList({ repos, onLoadMore, loading }: RepoListProps) {
+export function RepoList({ repos, loading }: RepoListProps) {
   return (
     <div>
       <Typography className="pb-6" variant="h1" color="primary">
