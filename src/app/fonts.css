@@ -1,0 +1,14 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap");
+
+:root {
+  --font-geist-sans: "Poppins", sans-serif; /* Updated to Poppins */
+  --font-geist-mono: "Poppins", sans-serif; /* Updated to Poppins */
+}
+
+.font-geist-sans {
+  font-family: var(--font-geist-sans);
+}
+
+.font-geist-mono {
+  font-family: var(--font-geist-mono);
+}
