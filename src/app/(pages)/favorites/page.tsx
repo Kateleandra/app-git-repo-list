@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Typography } from "@/app/components/Typography/typography.component";
 import { useStarredRepos } from "@/hooks/useStarredRepos";
@@ -10,9 +10,12 @@ import { toggleFavorite } from "@/utils/favorites";
 
 export default function FavoritesPage() {
   const router = useRouter();
-  const [searchedUsername, setSearchedUsername] = useState(
-    localStorage.getItem("username") || "guest"
-  );
+  const [searchedUsername, setSearchedUsername] = useState("guest");
+
+  useEffect(() => {
+    const username = localStorage.getItem("username") || "guest";
+    setSearchedUsername(username);
+  }, []);
 
   const { favoriteRepos, loading, error } = useStarredRepos(searchedUsername);
 
