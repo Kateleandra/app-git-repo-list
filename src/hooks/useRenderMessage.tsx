@@ -48,14 +48,19 @@ const EmptyState: React.FC = () => (
   </section>
 );
 
-const UserNotFound: React.FC<{ username: string }> = ({ username }) => (
+const UserNotFound: React.FC<{
+  username: string;
+  searchPerformed: boolean;
+}> = ({ username, searchPerformed }) => (
   <section
     className="flex flex-col items-center justify-center w-auto h-auto gap-4 p-8"
     aria-live="polite"
   >
-    <Typography variant="h1" color="primary">
-      "{username}"
-    </Typography>
+    {searchPerformed && username && (
+      <Typography variant="h1" color="primary">
+        "{username}"
+      </Typography>
+    )}
     <Typography variant="h1" color="grey">
       Nenhum usuário encontrado
     </Typography>
@@ -104,8 +109,18 @@ export function useRenderMessage({
   repos,
   reposLoading,
 }: RenderMessageProps) {
+  const [searchPerformed, setSearchPerformed] = React.useState(false);
+
+  React.useEffect(() => {
+    if (username) {
+      setSearchPerformed(true);
+    }
+  }, [username]);
+
+  const displayUsername = userInfo?.login || (!username ? username : "");
+
   return useMemo(() => {
-    if (!username) {
+    if (!username && !searchPerformed) {
       return <EmptyState />;
     }
 
@@ -119,6 +134,22 @@ export function useRenderMessage({
       );
     }
 
-    return <UserNotFound username={username} />;
-  }, [username, userInfo, repos, reposLoading]);
+    if (searchPerformed && displayUsername) {
+      return (
+        <UserNotFound
+          username={displayUsername as string}
+          searchPerformed={searchPerformed}
+        />
+      );
+    }
+
+    return null;
+  }, [
+    username,
+    userInfo,
+    repos,
+    reposLoading,
+    searchPerformed,
+    displayUsername,
+  ]);
 }
