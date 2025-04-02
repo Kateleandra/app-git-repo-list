@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen, fireEvent } from "@testing-library/react";
 import "@testing-library/jest-dom";
-import { Button } from "./button.component.tsx";
+import { Button } from "./button.component.tsx.jsx";
 
 describe("Button Component", () => {
   it("should render the button with the correct text", () => {

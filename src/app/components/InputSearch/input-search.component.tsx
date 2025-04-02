@@ -41,8 +41,8 @@ export function InputSearch({
       <button
         type="button"
         onClick={onSearch}
-        className="absolute top-2 right-2 p-1 text-[#8c8c8c] hover:text-[#3b82f6] focus:outline-none"
-        aria-label="Buscar"
+        className="cursor-pointer absolute top-2 right-2 text-[#8C8C8C] hover:text-[#3b82f6] focus:outline-none"
+        aria-label="Buscar dados"
       >
         <MagnifyingGlassIcon className="w-6 h-6" aria-hidden="true" />
       </button>

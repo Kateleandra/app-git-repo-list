@@ -35,11 +35,12 @@ export const Button: React.FC<ButtonProps> = ({
 }) => {
   return (
     <button
+      type="button"
       onClick={onClick}
       disabled={disabled}
       aria-label={ariaLabel}
       className={clsx(
-        "flex items-center justify-center gap-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 font-medium text-[14px] leading-[20px] tracking-[0px] transition-all duration-200 w-[145px] h-[80px]",
+        " cursor-pointer flex items-center justify-center gap-2 rounded focus:outline-none focus:ring-2 focus:ring-offset-2 font-medium text-[14px] leading-[20px] tracking-[0px] transition-all duration-200 w-[145px] h-[80px]",
         COLOR_CLASSES[color],
         SIZE_CLASSES[size],
         disabled && "opacity-50 cursor-not-allowed"

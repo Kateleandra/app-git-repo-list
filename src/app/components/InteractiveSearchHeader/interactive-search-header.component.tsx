@@ -2,7 +2,7 @@
 
 import React from "react";
 import useFetchUser from "@/hooks/useFetchUser";
-import { SearchHeader } from "@/app/presentation/components/SearchHeader/search-header.component";
+import { SearchHeader } from "@/app/components/SearchHeader/search-header.component";
 
 export default function InteractiveSearchHeader() {
   const { fetchUser } = useFetchUser();

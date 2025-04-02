@@ -42,9 +42,6 @@ const getLanguageColor = (language?: string): string =>
 export function RepoList({ repos, loading }: RepoListProps) {
   return (
     <div>
-      <Typography className="pb-6" variant="h1" color="primary">
-        Repositórios
-      </Typography>
       <ul className="flex flex-col gap-y-4">
         {repos.map((repo) => {
           const isRepoFavorited = isFavorited(repo.id.toString());
@@ -94,12 +91,13 @@ export function RepoList({ repos, loading }: RepoListProps) {
                   isRepoFavorited
                     ? "border-[#32C0C6] bg-primary"
                     : "border-gray-200 bg-gray-100"
-                }`}
+                } flex-shrink-0`}
               >
                 <HeartIcon
-                  className="w-6 h-6"
+                  className={`w-6 h-6 ${
+                    isRepoFavorited ? "text-[#32C0C6]" : "text-gray-400"
+                  }`}
                   aria-hidden="true"
-                  style={{ color: isRepoFavorited ? "#32C0C6" : "#8C8C8C" }}
                 />
               </button>
             </li>
