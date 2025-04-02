@@ -1,6 +1,6 @@
 import React from "react";
-import Typography from "@/app/components/Typography/typography.component";
 import Image from "next/image";
+import { Typography } from "../../presentation/components/Typography/typography.component";
 
 type SearchResultProps = {
   userInfo: any;

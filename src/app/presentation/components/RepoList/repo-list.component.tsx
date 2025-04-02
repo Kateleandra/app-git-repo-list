@@ -14,7 +14,6 @@ interface Repo {
 
 interface RepoListProps {
   repos: Repo[];
-  onLoadMore: () => void;
   loading: boolean;
 }
 
