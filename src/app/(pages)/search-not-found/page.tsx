@@ -1,7 +1,7 @@
 "use client";
 import React from "react";
 
-import { CustomError } from "@/app/presentation/components/CustomError/custom-error.component";
+import { CustomError } from "@/app/components/CustomError/custom-error.component";
 
 export default function SearchNotFoundPage() {
   return (

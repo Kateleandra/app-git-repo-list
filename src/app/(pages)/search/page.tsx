@@ -4,23 +4,27 @@ import React, { useState, useCallback, useMemo } from "react";
 import useFetchUser from "@/hooks/useFetchUser";
 import useRepos from "@/hooks/useRepos";
 import Image from "next/image";
-import { UserCard } from "@/app/presentation/components/User/user-card.component";
-import { RepoList } from "@/app/presentation/components/RepoList/repo-list.component";
-import { Typography } from "@/app/presentation/components/Typography/typography.component";
-import { CustomError } from "@/app/presentation/components/CustomError/custom-error.component";
-import { SearchHeaderFactory } from "@/app/presentation/components/SearchHeader/search-header.component";
+import { UserCard } from "@/app/components/User/user-card.component";
+import { RepoList } from "@/app/components/RepoList/repo-list.component";
+import { Typography } from "@/app/components/Typography/typography.component";
+import { CustomError } from "@/app/components/CustomError/custom-error.component";
+import { SearchHeaderFactory } from "@/app/components/SearchHeader/search-header.component";
 
 export default function SearchPage() {
   const [username, setUsername] = useState("");
+  const [searchPerformed, setSearchPerformed] = useState(false);
   const { userInfo, fetchUser } = useFetchUser();
   const { repos, loading: reposLoading } = useRepos(username);
   const [errorCode, setErrorCode] = useState<number | null>(null);
 
   const handleSearch = useCallback(() => {
+    if (!userInfo) {
+      setSearchPerformed(true);
+    }
     fetchUser(username)
       .then(() => setErrorCode(null))
       .catch((error) => setErrorCode(error.code));
-  }, [fetchUser, username]);
+  }, [fetchUser, username, userInfo]);
 
   const renderMessage = useMemo(() => {
     if (userInfo) {
@@ -39,13 +43,18 @@ export default function SearchPage() {
                 location: userInfo.location ?? undefined,
               }}
             />
-            <RepoList repos={repos} loading={reposLoading} />
+            <div>
+              <Typography className="pb-6" variant="h1" color="primary">
+                Repositórios
+              </Typography>
+              <RepoList repos={repos} loading={reposLoading} />
+            </div>
           </div>
         </div>
       );
     }
 
-    if (username) {
+    if (searchPerformed) {
       return (
         <div
           className="flex flex-col items-center justify-center w-auto h-auto gap-4 p-8"
@@ -91,7 +100,7 @@ export default function SearchPage() {
         />
       </div>
     );
-  }, [userInfo, username, repos, reposLoading]);
+  }, [userInfo, username, repos, reposLoading, searchPerformed]);
 
   if (errorCode) return <CustomError code={errorCode} />;
 
