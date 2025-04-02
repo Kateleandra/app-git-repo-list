@@ -10,6 +10,7 @@ type InputSearchProps = {
   onSearch?: () => void;
   setUsername?: React.Dispatch<React.SetStateAction<string>>;
   className?: string;
+  onClear?: () => void;
 };
 
 export function InputSearch({
@@ -18,6 +19,7 @@ export function InputSearch({
   onSearch,
   setUsername,
   className,
+  onClear,
 }: InputSearchProps) {
   return (
     <div
@@ -31,7 +33,6 @@ export function InputSearch({
         type="text"
         value={value}
         onChange={(e) => {
-          onChange?.(e.target.value);
           setUsername?.(e.target.value);
         }}
         placeholder="Buscar usuário"
@@ -40,7 +41,9 @@ export function InputSearch({
       />
       <button
         type="button"
-        onClick={onSearch}
+        onClick={() => {
+          onSearch?.();
+        }}
         className="cursor-pointer absolute top-2 right-2 text-[#8C8C8C] hover:text-[#3b82f6] focus:outline-none"
         aria-label="Buscar dados"
       >

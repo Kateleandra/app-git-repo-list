@@ -1,7 +1,8 @@
-import { useState, ReactNode } from "react";
+import { useState } from "react";
 
 interface UserInfo {
-  login: ReactNode;
+  id: string;
+  login: string;
   name: string | null;
   bio: string | null;
   location: string | null;
@@ -10,31 +11,42 @@ interface UserInfo {
   avatar_url: string;
 }
 
-export default function useFetchUser() {
+interface FetchUserService {
+  fetchUserData(username: string): Promise<UserInfo>;
+}
+class GitHubUserService implements FetchUserService {
+  async fetchUserData(username: string): Promise<UserInfo> {
+    const response = await fetch(`https://api.github.com/users/${username}`);
+    if (!response.ok) {
+      throw new Error("User not found");
+    }
+    return response.json();
+  }
+}
+
+export default function useFetchUser(
+  service: FetchUserService = new GitHubUserService()
+) {
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-  const [error, setError] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const fetchUser = async (username: string) => {
-    try {
-      setError("");
-      setUserInfo(null);
-      const userResponse = await fetch(
-        `https://api.github.com/users/${username}`
-      );
+    setLoading(true);
+    setError(null);
+    setUserInfo(null);
 
-      if (!userResponse.ok) {
-        throw new Error("User not found");
-      }
-      const user = await userResponse.json();
+    try {
+      const user = await service.fetchUserData(username);
       setUserInfo(user);
-      return user;
     } catch (err) {
       setError(
         err instanceof Error ? err.message : "An unknown error occurred"
       );
-      throw err;
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { userInfo, error, fetchUser };
+  return { userInfo, error, loading, fetchUser };
 }

@@ -1,13 +1,10 @@
+"use client";
+
 import React from "react";
 import "./globals.css";
 import "./fonts.css";
-import { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "Lista de repositórios do GitHub",
-  description:
-    "Este projeto é uma aplicação web desenvolvida com Next.js, que permite a busca e listagem de repositórios de usuários do GitHub.",
-};
+import { SearchHeaderFactory } from "@/app/components/SearchHeader/search-header.component";
+import { UserSearchProvider } from "@/app/context/UserSearchContext";
 
 export default function RootLayout({
   children,
@@ -17,7 +14,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="font-geist-sans font-geist-mono antialiased">
-        {children}
+        <UserSearchProvider>
+          <SearchHeaderFactory />
+          {children}
+        </UserSearchProvider>
       </body>
     </html>
   );

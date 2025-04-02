@@ -10,11 +10,13 @@ interface Repo {
   html_url: string;
   language?: string;
   updated_at: string;
+  owner_id?: string;
 }
 
 interface RepoListProps {
   repos: Repo[];
   loading: boolean;
+  userId?: string;
 }
 
 const LANGUAGE_COLORS: Record<string, string> = {
@@ -39,11 +41,13 @@ const LANGUAGE_COLORS: Record<string, string> = {
 const getLanguageColor = (language?: string): string =>
   LANGUAGE_COLORS[language ?? "default"];
 
-export function RepoList({ repos, loading }: RepoListProps) {
+export function RepoList({ repos = [], userId }: RepoListProps) {
+  const filteredRepos = repos.filter((repo) => repo.owner_id === userId);
+
   return (
     <div>
       <ul className="flex flex-col gap-y-4">
-        {repos.map((repo) => {
+        {filteredRepos.map((repo) => {
           const isRepoFavorited = isFavorited(repo.id.toString());
           return (
             <li
@@ -104,7 +108,6 @@ export function RepoList({ repos, loading }: RepoListProps) {
           );
         })}
       </ul>
-      {loading && <p>Carregando mais repositórios...</p>}
     </div>
   );
 }

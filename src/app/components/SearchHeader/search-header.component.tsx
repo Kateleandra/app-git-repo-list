@@ -6,6 +6,7 @@ import { HeartIcon } from "@heroicons/react/24/outline";
 import { Button } from "@/app/components/Button/button.component.tsx";
 import { Header } from "@/app/components/Header/header.component";
 import { InputSearch } from "@/app/components/InputSearch/input-search.component";
+import { useUserSearch } from "@/app/context/UserSearchContext";
 
 interface SearchHeaderProps {
   onSearch: () => void;
@@ -32,7 +33,11 @@ export function SearchHeader({
 
   return (
     <Header>
-      <InputSearch onSearch={handleSearch} setUsername={setUsername} />
+      <InputSearch
+        onSearch={handleSearch}
+        setUsername={setUsername}
+        onClear={() => setUsername("")}
+      />
       <Button aria-label="Ver favoritos" onClick={handleFavoritesClick}>
         <HeartIcon className="w-6 h-6" aria-hidden="true" />
         <span>Favoritos</span>
@@ -41,6 +46,25 @@ export function SearchHeader({
   );
 }
 
-export function SearchHeaderFactory(props: SearchHeaderProps) {
-  return <SearchHeader {...props} />;
+export function SearchHeaderFactory() {
+  const { username, setUsername, handleSearch, errorCode } = useUserSearch();
+
+  const handleSetUsername = useCallback(
+    (value: React.SetStateAction<string>) => {
+      if (typeof value === "string") {
+        setUsername(value);
+      }
+    },
+    [setUsername]
+  );
+
+  return (
+    <SearchHeader
+      setUsername={handleSetUsername}
+      onSearch={handleSearch}
+      username={username}
+      searchedUsername={username}
+      errorCode={errorCode}
+    />
+  );
 }

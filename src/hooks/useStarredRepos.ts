@@ -1,47 +1,52 @@
 import { useState, useEffect } from "react";
-import { Repo } from "@/mocks/useFavorites.mock";
 
-export function useStarredRepos() {
-  const [starredRepos, setStarredRepos] = useState<Repo[]>([]);
-  const [favoriteRepos, setFavoriteRepos] = useState<Repo[]>([]);
-  const [loading, setLoading] = useState(true);
+interface StarredRepo {
+  id: number;
+  name: string;
+  description: string;
+  url: string;
+}
+
+interface UseStarredReposResult {
+  favoriteRepos: StarredRepo[];
+  loading: boolean;
+  error: string | null;
+  starredRepos: StarredRepo[];
+}
+
+async function fetchStarredRepos(username: string): Promise<StarredRepo[]> {
+  const response = await fetch(
+    `https://api.github.com/users/${username}/starred`
+  );
+  if (!response.ok) {
+    throw new Error("Failed to fetch starred repositories");
+  }
+  return response.json();
+}
+
+export const useStarredRepos = (username: string): UseStarredReposResult => {
+  const [favoriteRepos, setFavoriteRepos] = useState<StarredRepo[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchStarredRepos = async () => {
+    const fetchUserStarredRepos = async () => {
       try {
-        const token = process.env.NEXT_PUBLIC_GITHUB_TOKEN;
-        if (!token) {
-          throw new Error("Token de autenticação não encontrado.");
-        }
-
-        const response = await fetch("https://api.github.com/user/starred", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (!response.ok) {
-          const errorMessage = `Erro ao buscar repositórios estrelados. Status: ${response.status} - ${response.statusText}`;
-          throw new Error(errorMessage);
-        }
-
-        const data = await response.json();
-        setStarredRepos(data);
-
-        const favorites = data.filter((repo: Repo) => repo.isFavorite);
-        setFavoriteRepos(favorites);
-      } catch (err) {
-        setError(
-          "Erro ao buscar repositórios estrelados. Verifique os logs para mais detalhes."
-        );
+        setLoading(true);
+        setError(null);
+        const data = await fetchStarredRepos(username);
+        setFavoriteRepos(data);
+      } catch (err: any) {
+        setError(err.message || "An unexpected error occurred.");
       } finally {
         setLoading(false);
       }
     };
 
-    fetchStarredRepos();
-  }, []);
+    if (username) {
+      fetchUserStarredRepos();
+    }
+  }, [username]);
 
-  return { starredRepos, favoriteRepos, loading, error };
-}
+  return { favoriteRepos, loading, error, starredRepos: favoriteRepos };
+};

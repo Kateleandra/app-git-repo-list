@@ -17,6 +17,7 @@ const mockRepos = [
     html_url: "https://github.com/repo1",
     language: "JavaScript",
     updated_at: "2023-01-01T00:00:00Z",
+    owner_id: "user1",
   },
   {
     id: "2",
@@ -25,6 +26,7 @@ const mockRepos = [
     html_url: "https://github.com/repo2",
     language: "Python",
     updated_at: "2023-02-01T00:00:00Z",
+    owner_id: "user2",
   },
 ];
 
@@ -36,9 +38,7 @@ describe("RepoList Component", () => {
   it("renders the list of repositories", () => {
     (isFavorited as jest.Mock).mockImplementation(() => false);
 
-    render(
-      <RepoList repos={mockRepos} onLoadMore={jest.fn()} loading={false} />
-    );
+    render(<RepoList repos={mockRepos} loading={false} />);
 
     expect(screen.getByText("Repositórios")).toBeInTheDocument();
     mockRepos.forEach((repo) => {
@@ -58,9 +58,7 @@ describe("RepoList Component", () => {
   it("calls toggleFavorite when the favorite button is clicked", () => {
     (isFavorited as jest.Mock).mockImplementation(() => false);
 
-    render(
-      <RepoList repos={mockRepos} onLoadMore={jest.fn()} loading={false} />
-    );
+    render(<RepoList repos={mockRepos} loading={false} />);
 
     const favoriteButtons = screen.getAllByRole("button");
     fireEvent.click(favoriteButtons[0]);
@@ -74,9 +72,7 @@ describe("RepoList Component", () => {
   it("displays the correct favorite state", () => {
     (isFavorited as jest.Mock).mockImplementation((id) => id === "1");
 
-    render(
-      <RepoList repos={mockRepos} onLoadMore={jest.fn()} loading={false} />
-    );
+    render(<RepoList repos={mockRepos} loading={false} />);
 
     const favoriteButtons = screen.getAllByRole("button");
     expect(favoriteButtons[0]).toHaveClass("bg-primary");
@@ -84,7 +80,7 @@ describe("RepoList Component", () => {
   });
 
   it("displays loading text when loading is true", () => {
-    render(<RepoList repos={[]} onLoadMore={jest.fn()} loading={true} />);
+    render(<RepoList repos={[]} loading={true} />);
 
     expect(
       screen.getByText("Carregando mais repositórios...")

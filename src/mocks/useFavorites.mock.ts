@@ -5,6 +5,7 @@ export interface Repo {
   html_url: string;
   updated_at: string;
   isFavorite?: boolean;
+  owner_id?: string;
 }
 
 export const mockFavoriteRepos: Repo[] = [
